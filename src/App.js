@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import config from './config';
+import BookList from './BookList/BookList'
 
 class App extends Component {
   state = {
@@ -34,7 +35,6 @@ class App extends Component {
 
   }
   render() {
-    const bookTitles = this.state.books.map(book => <p>{book.volumeInfo.title}</p>)
     return (
       <main className='App'>
         <form
@@ -47,7 +47,7 @@ class App extends Component {
           >Search</button>
         </form>
         <div>
-          {bookTitles}
+          <BookList books={this.state.books} />
         </div>
       </main>
     );
