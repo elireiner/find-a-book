@@ -8,11 +8,13 @@ class App extends Component {
     this.state = {
       books: [],
       error: null,
-      Filter: null
+      Filter: 'partial',
+      PrintType: 'all'
     };
 
     // This binding is necessary to make `this` work in the callback
     this.handleOptions = this.handleOptions.bind(this);
+    this.handleType = this.handleType.bind(this);
   }
 
   setBooks = books => {
@@ -25,12 +27,18 @@ class App extends Component {
       Filter: type
     })
   }
-  constructUrl = (term) => {
-    let baseUrl = config.API_ENDPOINT + term + '&key=' + config.API_KEY;
-    console.log(baseUrl);
-    this.state.Filter === 'full' && baseUrl += '&Filter=full';
-    return baseUrl
 
+  setType = type => {
+    this.setState({
+      PrintType: type
+    })
+  }
+  constructUrl = (term) => {
+    const filter = this.state.Filter;
+    const PrintType = this.state.PrintType;
+    let baseUrl = config.API_ENDPOINT + term + `&Filter=${filter}` + `&printType=${PrintType}` + '&key=' + config.API_KEY;
+    console.log(baseUrl);
+    return baseUrl
   }
   handleSearch = e => {
     e.preventDefault()
@@ -53,6 +61,12 @@ class App extends Component {
     this.setFilter(value)
     console.log(value)
   }
+
+  handleType(e) {
+    const { value } = e.target
+    this.setType(value)
+    console.log(value)
+  }
   render() {
     return (
       <main className='App'>
@@ -64,6 +78,13 @@ class App extends Component {
           <select onChange={this.handleOptions}>
             <option value='all'>any</option>
             <option value='full'>full</option>
+          </select>
+
+          <label htmlFor='all'>Filter for type</label>
+          <select onChange={this.handleType}>
+            <option value='all'>All</option>
+            <option value='magazines'>Magazines</option>
+            <option value='books'>Books</option>
           </select>
           <button type='submit'>
             Search
